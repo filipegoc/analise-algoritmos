@@ -28,60 +28,19 @@ media_linear <- mean(dados$tempo_linear)
 cat("Tempo médio de execução (Busca Binária):", media_binaria, "ns\n")
 cat("Tempo médio de execução (Busca Linear):", media_linear, "ns\n")
 
-# Cálculo do desvio padrão
-sd_binaria <- sd(dados$tempo_binaria)
-sd_linear <- sd(dados$tempo_linear)
+# Definir os dados, tempos médios de execução para cada tamanho de array
+tamanho_array <- c(1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000)
+tempo_busca_linear <- c(659, 1407, 11028, 171948, 2058248, 16944410, 161056772)
+tempo_busca_binaria <- c(311, 185, 244, 1107, 4021, 19096, 22347)
 
-cat("Desvio padrão (Busca Binária):", sd_binaria, "ns\n")
-cat("Desvio padrão (Busca Linear):", sd_linear, "ns\n")
+# Criar o gráfico
+plot(tamanho_array, tempo_busca_linear, type="o", col="red", log="xy",
+     xlab="Tamanho do Array", ylab="Tempo (ns)", 
+     main="Comparação de Tempo: Busca Linear vs. Busca Binária",
+     lwd=2, pch=19)
 
-# Histograma para a busca binária e busca linear
-ggplot(dados, aes(x = tempo_binaria)) +
-  geom_histogram(binwidth = 1000, fill = "blue", alpha = 0.5) +
-  labs(title = "Distribuição dos Tempos de Execução (Busca Binária)", x = "Tempo (ns)", y = "Frequência")
+# Adicionar a linha da busca binária
+lines(tamanho_array, tempo_busca_binaria, type="o", col="blue", lwd=2, pch=19)
 
-ggplot(dados, aes(x = tempo_linear)) +
-  geom_histogram(binwidth = 1000, fill = "red", alpha = 0.5) +
-  labs(title = "Distribuição dos Tempos de Execução (Busca Linear)", x = "Tempo (ns)", y = "Frequência")
-
-# Plotando a relação entre o número buscado e o tempo de execução
-ggplot(dados, aes(x = numero_buscado, y = tempo_binaria)) +
-  geom_point(color = "blue") +
-  labs(title = "Tempo de Execução da Busca Binária vs Número Buscado", x = "Número Buscado", y = "Tempo (ns)")
-
-ggplot(dados, aes(x = numero_buscado, y = tempo_linear)) +
-  geom_point(color = "red") +
-  labs(title = "Tempo de Execução da Busca Linear vs Número Buscado", x = "Número Buscado", y = "Tempo (ns)")
-
-
-# Cálculo da razão entre os tempos de execução
-dados$razao_tempo <- dados$tempo_linear / dados$tempo_binaria
-
-# Visualizando a razão
-ggplot(dados, aes(x = numero_buscado, y = razao_tempo)) +
-  geom_line(color = "purple") +
-  labs(title = "Razão entre o Tempo de Execução da Busca Linear e Binária", x = "Número Buscado", y = "Razão Linear/Binária")
-
-
-# Ajuste de curvas para busca binária e busca linear
-# Filtrar os valores de numero_buscado maiores que zero
-modelo_binaria_dados_filtrados <- subset(dados, numero_buscado > 0)
-modelo_linear <- lm(tempo_linear ~ numero_buscado, data = dados)
-
-summary(modelo_binaria_dados_filtrados)  # Ver análise do modelo da busca binária
-summary(modelo_linear)   # Ver análise do modelo da busca linear
-
-
-# Filtrar para o melhor caso (número buscado no início)
-melhor_caso <- subset(dados, numero_buscado == min(dados$numero_buscado))
-
-# Filtrar para o pior caso (número buscado no final)
-pior_caso <- subset(dados, numero_buscado == max(dados$numero_buscado))
-
-# Filtrar para o caso médio
-caso_medio <- subset(dados, numero_buscado == median(dados$numero_buscado))
-
-# Comparar tempos para os três cenários
-cat("Melhor caso - Tempo de busca binária:", melhor_caso$tempo_binaria, "Tempo de busca linear:", melhor_caso$tempo_linear, "\n")
-cat("Pior caso - Tempo de busca binária:", pior_caso$tempo_binaria, "Tempo de busca linear:", pior_caso$tempo_linear, "\n")
-cat("Caso médio - Tempo de busca binária:", caso_medio$tempo_binaria, "Tempo de busca linear:", caso_medio$tempo_linear, "\n")
+# Adicionar a legenda
+legend("topleft", legend=c("Busca Linear", "Busca Binária"), col=c("red", "blue"), lwd=2, pch=19)

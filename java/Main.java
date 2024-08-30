@@ -25,9 +25,9 @@ public class Main {
                 writer = new FileWriter("search_logs" + size + ".txt", true); // Abrir o arquivo em modo de append (adicionar conteúdo)
 
                 // Cabeçalho do arquivo de logs
-//                writer.write("size: {target, binarySearch, linearSearch}\n");
+                writer.write("size: {target, binarySearch, linearSearch}\n");
 
-//                writer.write("Array Size: " + size + "\n");
+                writer.write("Array Size: " + size + "\n");
 
                 for (int i = 0; i < numIterations; i++) {
                     // Gera um vetor grande de inteiros ordenados
